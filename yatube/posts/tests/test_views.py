@@ -31,10 +31,18 @@ class PostPagesTests(TestCase):
     def test_pages_uses_correct_template(self):
         pages_names_templates = {
             reverse('posts:index'): 'posts/index.html',
-            reverse('posts:group_list', kwargs={'slug': 'test_slug'}): 'posts/group_list.html',
-            reverse('posts:profile', kwargs={'username': 'test_user'}): 'posts/profile.html',
-            reverse('posts:post_detail', kwargs={'post_id': f'{PostPagesTests.post.id}'}): 'posts/post_detail.html',
-            reverse('posts:post_edit', kwargs={'post_id': f'{PostPagesTests.post.id}'}): 'posts/create_post.html',
+            reverse('posts:group_list', kwargs={'slug': 'test_slug'}):
+                'posts/group_list.html',
+            reverse('posts:profile', kwargs={'username': 'test_user'}):
+                'posts/profile.html',
+            reverse(
+                'posts:post_detail',
+                kwargs={
+                    'post_id': f'{PostPagesTests.post.id}',
+                }): 'posts/post_detail.html',
+            reverse('posts:post_edit',
+                    kwargs={'post_id': f'{PostPagesTests.post.id}'}):
+                'posts/create_post.html',
             reverse('posts:post_create'): 'posts/create_post.html',
         }
 
@@ -73,19 +81,27 @@ class TestPostContext(TestCase):
         self.assertListEqual(context_list, expected_list)
 
     def test_group_list_page_show_correct_context(self):
-        response = self.authorized_client.get(reverse('posts:group_list', kwargs={'slug': 'test_slug'}))
-        expected_list = list(TestPostContext.group.posts.all()[:INDEX_PER_PAGE_LIMIT])
+        response = self.authorized_client.get(reverse(
+            'posts:group_list',
+            kwargs={'slug': 'test_slug'}))
+        expected_list = list(
+            TestPostContext.group.posts.all()[:INDEX_PER_PAGE_LIMIT])
         context_list = response.context.get('page_obj').object_list
         self.assertListEqual(context_list, expected_list)
 
     def test_profile_page_show_correct_context(self):
-        response = self.authorized_client.get(reverse('posts:profile', kwargs={'username': 'test_user'}))
-        expected_list = list(TestPostContext.user.posts.all()[:INDEX_PER_PAGE_LIMIT])
+        response = self.authorized_client.get(reverse(
+            'posts:profile',
+            kwargs={'username': 'test_user'}))
+        expected_list = list(
+            TestPostContext.user.posts.all()[:INDEX_PER_PAGE_LIMIT])
         context_list = response.context.get('page_obj').object_list
         self.assertListEqual(context_list, expected_list)
 
     def test_post_detail_page_show_correct_context(self):
-        response = self.authorized_client.get(reverse('posts:post_detail', kwargs={'post_id': 1}))
+        response = self.authorized_client.get(reverse(
+            'posts:post_detail',
+            kwargs={'post_id': 1}))
         expected_post = Post.objects.get(id=1)
         context_post = response.context.get('post')
         self.assertEqual(context_post, expected_post)
@@ -99,7 +115,8 @@ class TestPostContext(TestCase):
     def test_post_edit_form_show_correct_context(self):
         """Честно, хз как проверить форму редактирования поста"""
 
-        response = self.authorized_client.get(reverse('posts:post_edit', kwargs={'post_id': 1}))
+        response = self.authorized_client.get(reverse(
+            'posts:post_edit', kwargs={'post_id': 1}))
         expected_form = type(PostForm())
         context_form = type(response.context.get('form'))
         self.assertEqual(context_form, expected_form)
@@ -110,10 +127,11 @@ class TestPostContext(TestCase):
             reverse('posts:group_list', kwargs={'slug': 'test_slug'}): 10,
             reverse('posts:profile', kwargs={'username': 'test_user'}): 10,
         }
-        for reverse_name, paginator_records in pages_name_paginator_records.items():
+        for reverse_name, pag_records in pages_name_paginator_records.items():
             with self.subTest():
                 response = self.authorized_client.get(reverse_name)
-                self.assertEqual(len(response.context['page_obj']), paginator_records)
+                self.assertEqual(
+                    len(response.context['page_obj']), pag_records)
 
     def test_second_paginator_page_contains_three_records(self):
         pages_name_paginator_records = {
@@ -121,10 +139,11 @@ class TestPostContext(TestCase):
             reverse('posts:group_list', kwargs={'slug': 'test_slug'}): 3,
             reverse('posts:profile', kwargs={'username': 'test_user'}): 3,
         }
-        for reverse_name, paginator_records in pages_name_paginator_records.items():
+        for reverse_name, pag_records in pages_name_paginator_records.items():
             with self.subTest():
                 response = self.authorized_client.get(reverse_name + '?page=2')
-                self.assertEqual(len(response.context['page_obj']), paginator_records)
+                self.assertEqual(
+                    len(response.context['page_obj']), pag_records)
 
 
 class TestOnePost(TestCase):
@@ -168,5 +187,7 @@ class TestOnePost(TestCase):
         for page, posts_count in pages_posts_count.items():
             with self.subTest(page=page):
                 response = self.authorized_client.get(page)
-                self.assertEqual(len(response.context.get('page_obj').object_list), posts_count)
-
+                self.assertEqual(
+                    len(
+                        response.context.get('page_obj').object_list
+                    ), posts_count)

@@ -45,7 +45,8 @@ class PostURLTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_post_edit_url_exists_desired_location(self):
-        response = self.authorized_client.get(f'/posts/{PostURLTests.post.id}/edit/')
+        response = self.authorized_client.get(
+            f'/posts/{PostURLTests.post.id}/edit/')
         self.assertEqual(response.status_code, 200)
 
     def test_urls_uses_correct_template(self):
@@ -62,4 +63,3 @@ class PostURLTests(TestCase):
             with self.subTest(url=url):
                 response = self.authorized_client.get(url)
                 self.assertTemplateUsed(response, template)
-

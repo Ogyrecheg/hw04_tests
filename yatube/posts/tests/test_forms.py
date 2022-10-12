@@ -37,10 +37,14 @@ class PostCreateFormTests(TestCase):
             reverse('posts:post_create'),
             data=form_data
         )
-        self.assertRedirects(response, reverse('posts:profile', kwargs={'username': 'test_user'}))
+        self.assertRedirects(response,
+                             reverse('posts:profile',
+                                     kwargs={'username': 'test_user'}))
         self.assertEqual(Post.objects.count(), posts_count + 1)
         self.assertTrue(
-            Post.objects.filter(text='Тестовый пост добавлен из формы').exists()
+            Post.objects.filter(
+                text='Тестовый пост добавлен из формы'
+            ).exists()
         )
 
     def test_post_edit_page_make_change_in_post(self):
@@ -50,7 +54,14 @@ class PostCreateFormTests(TestCase):
             'group': self.group.id,
         }
         response = self.authorized_client.post(
-            reverse('posts:post_edit', kwargs={'post_id': self.post.id}), data=form_data, follow=True)
-        self.assertRedirects(response, reverse('posts:post_detail', kwargs={'post_id': self.post.id}))
+            reverse(
+                'posts:post_edit',
+                kwargs={'post_id': self.post.id}),
+            data=form_data,
+            follow=True,
+        )
+        self.assertRedirects(response, reverse(
+            'posts:post_detail',
+            kwargs={'post_id': self.post.id}))
         self.assertEqual(Post.objects.count(), posts_count)
         self.assertEqual(Post.objects.get(id=1).text, form_data['text'])
