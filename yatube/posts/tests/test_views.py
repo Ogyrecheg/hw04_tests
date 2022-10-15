@@ -75,12 +75,16 @@ class TestPostContext(TestCase):
         self.authorized_client.force_login(TestPostContext.user)
 
     def test_index_page_show_correct_context(self):
+        """Тестируем корректное отображение контекста главной страницы."""
+
         response = self.authorized_client.get(reverse('posts:index'))
         expected_list = list(Post.objects.all()[:INDEX_PER_PAGE_LIMIT])
         context_list = response.context.get('page_obj').object_list
         self.assertListEqual(context_list, expected_list)
 
     def test_group_list_page_show_correct_context(self):
+        """Тестируем корректное отображение контекста страницы группы."""
+
         response = self.authorized_client.get(reverse(
             'posts:group_list',
             kwargs={'slug': 'test_slug'}))
@@ -90,6 +94,8 @@ class TestPostContext(TestCase):
         self.assertListEqual(context_list, expected_list)
 
     def test_profile_page_show_correct_context(self):
+        """Тестируем корректное отображение контекста профайла."""
+
         response = self.authorized_client.get(reverse(
             'posts:profile',
             kwargs={'username': 'test_user'}))
@@ -99,6 +105,8 @@ class TestPostContext(TestCase):
         self.assertListEqual(context_list, expected_list)
 
     def test_post_detail_page_show_correct_context(self):
+        """Тестируем корректное отображение контекста post_detail."""
+
         response = self.authorized_client.get(reverse(
             'posts:post_detail',
             kwargs={'post_id': 1}))
@@ -107,21 +115,31 @@ class TestPostContext(TestCase):
         self.assertEqual(context_post, expected_post)
 
     def test_post_create_show_correct_context(self):
-        response = self.authorized_client.get(reverse('posts:post_create'))
-        expected_form = type(PostForm())
-        context_form = type(response.context.get('form'))
-        self.assertEqual(context_form, expected_form)
+        """Тестируем корректное отображение контекста формы post_create."""
 
-    def test_post_edit_form_show_correct_context(self):
-        """Честно, хз как проверить форму редактирования поста"""
+        response = self.authorized_client.get(reverse('posts:post_create'))
+        self.assertIn('form', response.context)
+        self.assertIsInstance(response.context['form'], PostForm)
+
+    def test_post_edit_and_create_form_show_correct_context(self):
+        """Тестируем корректное отображение контекста формы post_edit."""
 
         response = self.authorized_client.get(reverse(
             'posts:post_edit', kwargs={'post_id': 1}))
-        expected_form = type(PostForm())
-        context_form = type(response.context.get('form'))
-        self.assertEqual(context_form, expected_form)
+
+        self.assertIn('form', response.context)
+        self.assertIsInstance(response.context['form'], PostForm)
+
+        self.assertIn('is_edit', response.context)
+        is_edit = response.context['is_edit']
+        self.assertIsInstance(is_edit, bool)
 
     def test_first_paginator_page_contains_ten_records(self):
+        """
+        Тестируем корректное отображение количества постов
+        пагинатора первой страницы.
+        """
+
         pages_name_paginator_records = {
             reverse('posts:index'): 10,
             reverse('posts:group_list', kwargs={'slug': 'test_slug'}): 10,
@@ -134,6 +152,10 @@ class TestPostContext(TestCase):
                     len(response.context['page_obj']), pag_records)
 
     def test_second_paginator_page_contains_three_records(self):
+        """
+        Тестируем корректное отображение количества постов
+        пагинатора второй страницы.
+        """
         pages_name_paginator_records = {
             reverse('posts:index'): 3,
             reverse('posts:group_list', kwargs={'slug': 'test_slug'}): 3,
@@ -179,6 +201,8 @@ class TestOnePost(TestCase):
         self.authorized_client.force_login(TestOnePost.user)
 
     def test_pages_show_correct_count_posts(self):
+        """Тестируем корректное отображение количества постов на страницах."""
+
         pages_posts_count = {
             reverse('posts:index'): 6,
             reverse('posts:group_list', kwargs={'slug': 'test_slug_one'}): 5,

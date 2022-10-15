@@ -9,7 +9,10 @@ User = get_user_model()
 class Post(models.Model):
     """Модель постов."""
 
-    text = models.TextField(verbose_name='текст поста')
+    text = models.TextField(
+        verbose_name='текст поста',
+        help_text='Введите текст поста',
+    )
     pub_date = models.DateTimeField(
         auto_now_add=True,
         verbose_name='дата публикации'
@@ -27,6 +30,7 @@ class Post(models.Model):
         blank=True,
         null=True,
         verbose_name='группа постов',
+        help_text='Группа, к которой будет относиться пост',
     )
 
     class Meta:
