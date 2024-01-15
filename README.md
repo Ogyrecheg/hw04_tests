@@ -1,3 +1,60 @@
-# hw04_tests
+## Описание проекта
+Yatube - это социальная сеть с авторизацией, персональными лентами, комментариями и подписками на авторов статей.
 
-[![CI](https://github.com/yandex-praktikum/hw04_tests/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/yandex-praktikum/hw04_tests/actions/workflows/python-app.yml)
+### Функционал
+1. Написаны тесты для моделей приложения Django:
+- протестированы модели приложения posts в ``Yatube`;
+- добавлен метод str в классы Post и Group;
+- протестировано отображения значения поля str в объектах моделей.
+
+2. Написаны тесты для URLs приложения Django:
+- проверена доступность страниц и правильность названия шаблонов приложения Posts проекта Yatube согласно авторизации;
+- проверен запрос к несуществующей странице, вадающий ошибку 404.
+
+3. Написаны тесты для views: namespase:name и шаблонов приложения Django, а также тесты для views контекста приложения Django и проверки создания поста:
+- написаны тесты, проверяющие соответствие html-шаблонов во view - функциях.
+- проверена корректность словаря context, передаваемого в шаблон при вызове.
+- проверно, что если при создании поста и указания группы, пост появляется.
+- проверено, что пост не попадает в группу, для которой не был предназначен.
+
+## Запуск проекта
+1. Клонировать репозиторий:
+```bash
+git clone https://github.com/Ogyrecheg/hw04_tests.git
+```
+
+2. Создать и активировать виртуальное окружение:
+```bash
+py -3.7 -m venv venv
+
+bash/zsh
+source venv/bin/activate
+
+Windows:
+venv\Scripts\activate.bat
+```
+3. Обновить pip и установить зависимости из ```requirements.txt```
+```bash
+python3 -m pip install --upgrade pip
+
+pip install -r requirements.txt
+```
+4. Выполнить миграции на уровне проекта:
+```
+cd yatube
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
+5. Запустить проект локально:
+```
+python3 manage.py runserver
+7. Зарегистирировать суперпользователя Django:
+```
+python3 manage.py createsuperuser
+
+**Технологии:**
+- Python
+- Django
+
+### Автор проекта:
+[Шевченко Александр](https://github.com/Ogyrecheg)
