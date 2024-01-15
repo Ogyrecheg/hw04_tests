@@ -48,9 +48,11 @@ python3 manage.py migrate
 5. Запустить проект локально:
 ```
 python3 manage.py runserver
+```
 7. Зарегистирировать суперпользователя Django:
 ```
 python3 manage.py createsuperuser
+```
 
 **Технологии:**
 - Python
